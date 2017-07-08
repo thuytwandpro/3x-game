@@ -1,0 +1,193 @@
+<html>
+<head>
+<style>
+body{background-color: #939393; padding:0px;margin:0}
+.wrapper{padding:0 5px;}
+.hello{width:20%;float:left; margin:10px; padding:10px;}
+.play{width:50%;background-color:#ccff99;float:left; margin:0 10px; padding:0 10px;}
+#computer, #player{margin:15px 0}
+#computer, #player h2{margin: 15px 0;}
+h2#level{text-align:right; margin-right:15px }
+h2#level i{color:red }
+.detail{width:20%;float:left; margin:10px; padding:10px;}
+.form{width: calc(100% - 40px);background-color:#ffffff; margin:0 10px 10px 10px; padding:10px;}
+.form form{width:330px;margin:0 auto;padding 0;background-color:yellow}
+.form label{font-size:130px;padding:0 10px; background-color:silver; margin:0 11px;}
+.form input[type=text]{font-size:100px; width:80px; padding:10px; margin:0 13px}
+.form select{font-size:20px; width:60px; padding:10px; margin:5px 25px;float:left;}
+.form input[type=button]{border-radius: 28px; color: #ffffff; font-size: 20px; background: #3498db; padding: 10px 20px 10px 20px; text-decoration: none;cursor:pointer;}
+</style>
+</head>
+<body >
+<div class="wrapper">
+	<div class="hello"></div>
+	<div class="play">
+	
+		<section id="computer">
+			<h2 id="level">Level: <i id="level-count">1</i></h2>
+			<h2>Score: <i id="score-computer">200</i></h2>
+			<div class="form">
+				<form>
+					<label id="first-cpt">1</label>
+					<label id="second-cpt">2</label>
+					<label id="third-cpt">3</label>
+				</form>
+			</div>
+		</section>
+		
+		<hr style="width:70%"/>
+		
+		<section id="player">
+			<h2>Score: <i id="score-player"></i></h2>
+			<div class="form">
+				<form>
+					<select id="first-player">
+						<option value=""></option>
+					</select>
+					<select id="second-player">
+						<option value=""></option>
+					</select>
+					<select id="third-player">
+						<option value=""></option>
+					</select>
+				</form>
+				<form>
+					<input type="text" id="txt-first-player" disabled/>
+					<input type="text" id="txt-second-player" disabled/>
+					<input type="text" id="txt-third-player" disabled/>
+				</form>
+			</div>
+		</section>
+		
+		<section id="controls">
+			<div class="form">
+				<form>
+					<input type="button" id="btn-play" onclick="play()" value="Play" />
+					<input type="button" style="visibility:hidden" id="btn-kq" onclick="result()" value="Finish" />
+					<input type="button" style="visibility:hidden" id="btn-reset" onclick="Reset()" value="Reset" style="float:right"/>
+				</form>
+			</div>
+		</section>
+		
+	</div>
+	<div class="detail"></div>
+</div>
+
+<script>
+	
+			var score = 200;
+			var level=1;
+			
+			var items = Array(1,2,3,4,5,6,7,8,9);
+			var newOptions=items;
+			var newValues=items;
+			selectField1 = document.getElementById("first-player");
+			selectField2 = document.getElementById("second-player");
+			selectField3 = document.getElementById("third-player");
+			selectField1.options.length = 0;
+			selectField2.options.length = 0;
+			selectField3.options.length = 0;
+			for (i=0; i<newOptions.length; i++) 
+			{
+			selectField1.options[selectField1.length] = new Option(newOptions[i], newValues[i]);
+			selectField2.options[selectField2.length] = new Option(newOptions[i], newValues[i]);
+			selectField3.options[selectField3.length] = new Option(newOptions[i], newValues[i]);
+			}
+			
+			document.getElementById("first-player").onchange = function(){
+			document.getElementById("txt-first-player").value = this.value;
+			};
+			document.getElementById("second-player").onchange = function(){
+			document.getElementById("txt-second-player").value = this.value;
+			};
+			document.getElementById("third-player").onchange = function(){
+			document.getElementById("txt-third-player").value = this.value;
+			};
+	
+	
+	function play(){
+	
+	var pl1=document.getElementById("txt-first-player").value,
+		pl2=document.getElementById("txt-second-player").value,
+		pl3=document.getElementById("txt-third-player").value;
+		
+	if((pl1 != "")&&(pl2 != "")&&(pl3 != "")){
+	
+	function rand(min, max) {
+	  var offset = min;
+	  var range = (max - min) + 1;
+
+	  var randomNumber = Math.floor( Math.random() * range) + offset;
+	  return randomNumber;
+	}
+
+	randomNumber1 = rand(0, items.length - 1);
+	randomNumber2 = rand(0, items.length - 1);
+	randomNumber3 = rand(0, items.length - 1);
+
+	var randomItem1 = items[randomNumber1];
+	var randomItem2 = items[randomNumber2];
+	var randomItem3 = items[randomNumber3];
+	
+		document.getElementById('first-cpt').innerText = randomItem1;
+		document.getElementById('second-cpt').innerText = randomItem2;
+		document.getElementById('third-cpt').innerText = randomItem3;
+		
+	var cpt1=randomItem1, cpt2=randomItem2, cpt3=randomItem3;
+			
+	var div1=Math.abs(cpt1 -parseInt(pl1)), div2=Math.abs(cpt2 -parseInt(pl2)), div3=Math.abs(cpt3 -parseInt(pl3));
+	
+	var kq = div1*3 + div2*2 +div3*1;
+	document.getElementById('score-player').innerHTML = div1 + "x3 + " + div2 + "x2 + " + div3 + "x1 = " + kq;
+		
+	score -= kq;
+	document.getElementById('score-computer').innerHTML = score;
+	
+	level ++;
+	document.getElementById('level-count').innerHTML = level;
+	
+	if(level == 10){
+		document.getElementById('btn-play').style.visibility = 'hidden';
+		document.getElementById('btn-kq').style.visibility = 'visible';
+		document.getElementById('btn-reset').style.visibility = 'visible';
+	}
+	
+	if(score<=0){
+		alert("GAME OVER \n Điểm số của bạn là: " + score);
+		document.getElementById('btn-play').style.visibility = 'hidden';
+		document.getElementById('btn-kq').style.visibility = 'visible';
+		document.getElementById('btn-reset').style.visibility = 'visible';
+	}
+		
+	}else{
+		alert("vui lòng chọn số");
+	}
+	}
+	
+	function result(){		
+		alert("Đã hết 10 level, điểm số của bạn là: " + score);
+	}
+	
+	function Reset(){		
+		alert("Game đã được reset. \n LET'S GO");
+		var score = 200;
+		var level = 1;
+		
+		document.getElementById('score-player').innerHTML = "";
+		
+		document.getElementById('btn-play').style.visibility = 'visible';
+		document.getElementById('btn-kq').style.visibility = 'hidden';
+		document.getElementById('btn-reset').style.visibility = 'hidden';
+		
+		document.getElementById('first-cpt').innerText = "1";
+		document.getElementById('second-cpt').innerText = "2";
+		document.getElementById('third-cpt').innerText = "3";
+		
+		document.getElementById('score-computer').innerHTML = score;
+		document.getElementById('level-count').innerHTML = level;
+	}
+	
+</script>
+
+</body>
+</html>
